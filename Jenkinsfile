@@ -15,21 +15,18 @@ pipeline {
 
   stages {
     stage('Maven Build') {
-      agent { docker { image 'maven:3.9.9-eclipse-temurin-25' } }
       steps {
         sh 'mvn clean package -DskipTests'
       }
     }
 
     stage('Run Tests') {
-      agent { docker { image 'maven:3.9.9-eclipse-temurin-25' } }
       steps {
         sh 'mvn test -DDB_USERNAME=root -DDB_PASSWORD=root'
       }
     }
 
     stage('SonarQube Analysis') {
-      agent { docker { image 'maven:3.9.9-eclipse-temurin-25' } }
       steps {
         sh 'mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970:sonar -Dsonar.host.url=http://host.docker.internal:9000/ -Dsonar.token=squ_903800015bff43aa5d9b2f8e64d18b21057bfa8f -DDB_USERNAME=root -DDB_PASSWORD=root'
       }
