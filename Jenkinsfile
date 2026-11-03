@@ -19,13 +19,13 @@ pipeline {
 
     stage('Run Tests') {
       steps {
-        sh 'mvn test'
+        sh 'mvn test -DDB_USERNAME=root -DDB_PASSWORD=root'
       }
     }
 
     stage('SonarQube Analysis') {
       steps {
-        sh 'mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970:sonar -Dsonar.host.url=http://localhost:9000/ -Dsonar.token=squ_903800015bff43aa5d9b2f8e64d18b21057bfa8f'
+        sh 'mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970:sonar -Dsonar.host.url=http://host.docker.internal:9000/ -Dsonar.token=squ_903800015bff43aa5d9b2f8e64d18b21057bfa8f -DDB_USERNAME=root -DDB_PASSWORD=root'
       }
     }
 
@@ -33,8 +33,8 @@ pipeline {
       steps {
         script {
             def token = "squ_903800015bff43aa5d9b2f8e64d18b21057bfa8f"
-            def sonarQubeUrl = "http://localhost:9000/api"
-            def componentKey = "com.codecode:order"
+            def sonarQubeUrl = "http://host.docker.internal:9000/api"
+            def componentKey = "com.codecode:restaurantlisting"
             def coverageThreshold = 80.0
 
             def response = sh (
@@ -59,8 +59,8 @@ pipeline {
     stage('Docker Build and Push') {
       steps {
           sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-          sh 'docker build -t codecode123/order-service-arm:${VERSION} .'
-          sh 'docker push codecode123/order-service-arm:${VERSION}'
+          sh 'docker build -t codecode123/restaurantlisting-arm-cicd:${VERSION} .'
+          sh 'docker push codecode123/restaurantlisting-arm-cicd:${VERSION}'
       }
     }
 
@@ -72,10 +72,10 @@ pipeline {
 
     stage('Update Image Tag in GitOps') {
       steps {
-        checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[ credentialsId: 'git-ssh', url: 'git@github.com:CodeCode-123/udemy-master-spring-boot-microservice-angular-k8s-cicd-aws.git'])
+        checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[ credentialsId: 'git-ssh', url: 'git@github.com:CodeCode-123/udemy-master-spring-boot-microservice-angular-k8s-cicd-aws-deployment.git'])
         script {
           sh '''
-            sed -i "s/image:.*/image: codecode123\\/order-service-arm:${VERSION}/" aws/order-manifest.yaml
+            sed -i "s/image:.*/image: codecode123\\/restaurantlisting-arm-cicd:${VERSION}/" k8s/restaurantlisting-manifest.yaml
           '''
           sh 'git checkout main'
           sh 'git add .'
