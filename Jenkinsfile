@@ -4,14 +4,13 @@ pipeline {
   environment {
     DOCKERHUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIAL')
     VERSION = "${env.BUILD_ID}"
-    // Override the EA-26 version for this specific job
-    JAVA_HOME = '/Users/ada1/Library/Java/JavaVirtualMachines/openjdk-ea-26/Contents/Home'
-    PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
+//     // Override the EA-26 version for this specific job
+//     JAVA_HOME = '/Users/ada1/Library/Java/JavaVirtualMachines/openjdk-ea-26/Contents/Home'
+//     PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
   }
 
   tools {
     maven "Maven"
-    jdk "jdk26"
   }
 
   stages {
