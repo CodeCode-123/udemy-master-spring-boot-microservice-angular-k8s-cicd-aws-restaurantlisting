@@ -1,5 +1,5 @@
 pipeline {
-  agent any {
+  agent {
     docker {
       // Change your image to one that explicitly packages JDK 25
       image 'maven:3.9.9-eclipse-temurin-25'
