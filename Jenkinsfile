@@ -1,5 +1,10 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+        image 'maven:3.9.9-eclipse-temurin-25' // Uses a Maven image pre-configured with JDK 25
+        args '-v /Users/ada1/.m2:/root/.m2' // Optional: Caches Maven dependencies
+      }
+  }
 
   environment {
     DOCKERHUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIAL')
