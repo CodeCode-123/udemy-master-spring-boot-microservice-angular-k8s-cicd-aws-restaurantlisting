@@ -1,5 +1,10 @@
 pipeline {
-  agent any
+  agent any {
+    docker {
+      // Change your image to one that explicitly packages JDK 25
+      image 'maven:3.9.9-eclipse-temurin-25'
+    }
+  }
 
   environment {
     DOCKERHUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIAL')
