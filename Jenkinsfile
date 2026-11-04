@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment {
-    DOCKERHUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIAL')
+//     DOCKERHUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIAL')
     VERSION = "${env.BUILD_ID}"
   }
 
@@ -58,9 +58,22 @@ pipeline {
       }
     }
 
+    stage('Login to Docker Hub') {
+      steps {
+        // 'docker-hub-credentials' matches the ID you created in Jenkins
+        withCredentials([usernamePassword(
+            credentialsId: 'DOCKER_HUB_CREDENTIAL',
+            usernameVariable: 'USER',
+            passwordVariable: 'PASS'
+        )]) {
+            // Log in securely using stdin to prevent credentials leaking in process lists
+            sh 'echo "$PASS" | docker login -u "$USER" --password-stdin'
+      }
+    }
+
     stage('Docker Build and Push') {
       steps {
-          sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+//           sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
           sh 'docker build -t codecode123/restaurantlisting-arm-cicd:${VERSION} .'
           sh 'docker push codecode123/restaurantlisting-arm-cicd:${VERSION}'
       }
