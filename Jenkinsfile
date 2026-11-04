@@ -68,6 +68,7 @@ pipeline {
         )]) {
             // Log in securely using stdin to prevent credentials leaking in process lists
             sh 'echo "$PASS" | docker login -u "$USER" --password-stdin'
+            }
       }
     }
 
