@@ -4,9 +4,6 @@ pipeline {
   environment {
     DOCKERHUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIAL')
     VERSION = "${env.BUILD_ID}"
-//     // Override the EA-26 version for this specific job
-//     JAVA_HOME = '/Users/ada1/Library/Java/JavaVirtualMachines/openjdk-ea-26/Contents/Home'
-//     PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
   }
 
   tools {
@@ -78,7 +75,7 @@ pipeline {
         checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[ credentialsId: 'git-ssh', url: 'git@github.com:CodeCode-123/udemy-master-spring-boot-microservice-angular-k8s-cicd-aws-deployment.git']])
         script {
           sh '''
-            sed -i "s/image:.*/image: codecode123\\/restaurantlisting-arm-cicd:${VERSION}/" k8s/restaurantlisting-manifest.yaml
+            sed -i "s/image:.*/image: codecode123\\/restaurantlisting-arm-cicd:${VERSION}/" backend/restaurantlisting-manifest.yaml
           '''
           sh 'git checkout main'
           sh 'git add .'
