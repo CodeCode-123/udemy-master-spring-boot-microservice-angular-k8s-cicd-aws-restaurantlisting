@@ -38,8 +38,8 @@ pipeline {
             def coverageThreshold = 80.0
 
             def response = sh (
-                 script: "curl -s -u ${token}: '${sonarQubeUrl}/measures/component?component=${componentKey}&metricKeys=coverage'",
-                 returnStdout: true
+                script: "curl -s -u ${token}: '${sonarQubeUrl}/measures/component?component=${componentKey}&metricKeys=coverage'",
+                returnStdout: true
             ).trim()
 
             // Parse the JSON payload
