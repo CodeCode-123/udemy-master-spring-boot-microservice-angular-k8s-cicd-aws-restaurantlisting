@@ -5,7 +5,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(useMainMethod = SpringBootTest.UseMainMethod.ALWAYS)
-@ActiveProfiles("test")
+//@ActiveProfiles("test")
 public class RestaurantlistingApplicationTest {
     @Test
     void contextLoads() {
