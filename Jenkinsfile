@@ -57,7 +57,7 @@ pipeline {
 
             echo "Coverage: ${coverageValue}"
 
-            if (coverageValue < coverageThreshold) {
+            if (coverageValue.toDouble() < coverageThreshold) {
                 error "Coverage is below the threshold of ${coverageThreshold}%. Aborting the pipeline."
             }
         }
