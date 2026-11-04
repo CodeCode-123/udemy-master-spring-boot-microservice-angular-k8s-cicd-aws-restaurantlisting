@@ -38,18 +38,26 @@ pipeline {
             def coverageThreshold = 80.0
 
             def response = sh (
-                 script: "curl -H 'Authorization: Bearer ${token}' '${sonarQubeUrl}/measures/component?component=${componentKey}&metricKeys=coverage'",
+                 script: "curl -s -u \${token}: '${sonarQubeUrl}/measures/component?component=${componentKey}&metricKeys=coverage,new_coverage'",
+//                  script: "curl -H 'Authorization: Bearer ${token}' '${sonarQubeUrl}/measures/component?component=${componentKey}&metricKeys=coverage'",
                  returnStdout: true
             ).trim()
 
-            def coverage = sh (
-                script: "echo '${response}' | jq -r '.component.measures[0].value'",
-                returnStdout: true
-            ).trim().toDouble()
+            // Parse the JSON payload
+            def json = readJSON text: response
 
-            echo "Coverage: ${coverage}"
+            // Extract the coverage value safely from the response structure
+            def coverageObj = json.component.measures.find { it.metric == 'coverage' }
+            def coverageValue = coverageObj ? coverageObj.value : "0"
 
-            if (coverage < coverageThreshold) {
+//             def coverage = sh (
+//                 script: "echo '${response}' | jq -r '.component.measures[0].value'",
+//                 returnStdout: true
+//             ).trim().toDouble()
+
+            echo "Coverage: ${coverageValue}"
+
+            if (coverageValue < coverageThreshold) {
                 error "Coverage is below the threshold of ${coverageThreshold}%. Aborting the pipeline."
             }
         }
