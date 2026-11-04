@@ -11,6 +11,12 @@ pipeline {
   }
 
   stages {
+    stage('Fix Git Permissions') {
+        steps {
+            sh 'git config --global --add safe.directory "*"'
+        }
+    }
+
     stage('Maven Build') {
       steps {
         sh 'mvn clean package -DskipTests'
