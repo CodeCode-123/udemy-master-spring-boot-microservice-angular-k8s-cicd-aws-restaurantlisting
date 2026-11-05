@@ -100,10 +100,11 @@ pipeline {
                 '''
                 sh 'git checkout main'
                 sh 'git add .'
-                //Added catchError to handle exit code 1
-                catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-                    sh 'git commit -m "Update image tag"'
-                }
+                sh 'git commit -m "Update image tag" || true'
+//                 //Added catchError to handle exit code 1
+//                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+//                     sh 'git commit -m "Update image tag"'
+//                 }
                 sshagent(['git-ssh']) {
                   sh('git push')
                 }
