@@ -17,12 +17,12 @@ pipeline {
 //             sh 'git config --global --add safe.directory "*"'
 //         }
 //     }
-    stage('Test Docker CLI') {
-      steps {
-        // This will execute against your Mac's Docker daemon
-        sh 'docker ps'
-      }
-    }
+//     stage('Test Docker CLI') {
+//       steps {
+//         // This will execute against your Mac's Docker daemon
+//         sh 'docker ps'
+//       }
+//     }
 
     stage('Maven Build') {
       steps {
