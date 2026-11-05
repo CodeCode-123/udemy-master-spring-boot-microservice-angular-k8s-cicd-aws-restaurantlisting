@@ -102,10 +102,21 @@ pipeline {
           sh 'git add .'
           sh 'git commit -m "Update image tag"'
           sshagent(['git-ssh']) {
-            sh('git push || true')
+            sh('git push')
           }
         }
       }
     }
+  }
+  // This is the final section executed at the end of the pipeline
+  post {
+      always {
+          echo 'This final block runs no matter what, even if a stage returned exit code 1.'
+          // Optional: Uncomment below if you want to forcefully mask the failure and mark the build unstable instead of failed
+          // script { currentBuild.result = 'UNSTABLE' }
+      }
+      success {
+          echo 'This only runs if everything passed.'
+      }
   }
 }
