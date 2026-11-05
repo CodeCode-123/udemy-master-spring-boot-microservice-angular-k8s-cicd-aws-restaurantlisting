@@ -94,8 +94,9 @@ pipeline {
     stage('Update Image Tag in GitOps') {
       steps {
         //Added catchError to handle exit code 1
-//         catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+        catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
               checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[ credentialsId: 'git-ssh', url: 'git@github.com:CodeCode-123/udemy-master-spring-boot-microservice-angular-k8s-cicd-aws-deployment.git']])
+        }
               script {
                 sh '''
                   sed "s/image:.*/image: codecode123\\/restaurantlisting-arm-cicd:${VERSION}/" restaurantlisting-manifest.yaml
@@ -103,10 +104,8 @@ pipeline {
                 sh 'git checkout main'
                 sh 'git add .'
                 sh 'git commit -m "Update image tag"'
-                catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-                    sshagent(['git-ssh']) {
-                      sh('git push')
-                    }
+                sshagent(['git-ssh']) {
+                  sh('git push')
                 }
               }
 //         }
