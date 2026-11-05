@@ -107,5 +107,13 @@ pipeline {
         }
       }
     }
+
+    stage('Run Tests') {
+        steps {
+            catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                sh 'pytest tests/'
+            }
+        }
+    }
   }
 }
