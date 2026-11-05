@@ -107,20 +107,5 @@ pipeline {
         }
       }
     }
-
-    stage('Run Script') {
-        steps {
-            script {
-                // Captures the exit code instead of failing
-                def statusCode = sh(script: './my-script.sh', returnStatus: true)
-
-                if (statusCode != 0) {
-                    echo "The script failed with code ${statusCode}, but we are handling it!"
-                    // Do something else, or set build to UNSTABLE instead of FAILURE
-                    currentBuild.result = 'UNSTABLE'
-                }
-            }
-        }
-    }
   }
 }
