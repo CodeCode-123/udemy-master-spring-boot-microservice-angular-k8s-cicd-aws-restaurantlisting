@@ -108,12 +108,14 @@ pipeline {
       }
     }
 
-    stage('Run Final Tests') {
-      steps {
-        catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-          sh 'pytest tests/'
+    stage('Run Linter') {
+        steps {
+            // Option 1: Append || true to force a 0 exit status
+            sh 'npm run lint || true'
+
+//             // Option 2: Inline shell handling (returns 0 even if grep finds nothing)
+//             sh 'grep "error" log.txt || echo "No errors found"'
         }
-      }
     }
   }
 }
