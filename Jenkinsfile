@@ -2,14 +2,12 @@ pipeline {
   agent any
 
   environment {
-//     DOCKERHUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIAL')
     VERSION = "${env.BUILD_ID}"
     PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:${env.PATH}"
   }
 
   tools {
     maven "Maven"
-//     dockerTool "docker"
   }
 
   stages {
@@ -18,17 +16,6 @@ pipeline {
         sh 'docker --version'
       }
     }
-//     stage('Fix Git Permissions') {
-//         steps {
-//             sh 'git config --global --add safe.directory "*"'
-//         }
-//     }
-//     stage('Test Docker CLI') {
-//       steps {
-//         // This will execute against your Mac's Docker daemon
-//         sh 'docker ps'
-//       }
-//     }
 
     stage('Maven Build') {
       steps {
@@ -93,7 +80,6 @@ pipeline {
 
     stage('Docker Build and Push') {
       steps {
-//           sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
           sh 'docker build -t codecode123/restaurantlisting-arm-cicd:${VERSION} .'
           sh 'docker push codecode123/restaurantlisting-arm-cicd:${VERSION}'
       }
@@ -110,7 +96,7 @@ pipeline {
         checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[ credentialsId: 'git-ssh', url: 'git@github.com:CodeCode-123/udemy-master-spring-boot-microservice-angular-k8s-cicd-aws-deployment.git']])
         script {
           sh '''
-            sed -i "s/image:.*/image: codecode123\\/restaurantlisting-arm-cicd:${VERSION}/" backend/restaurantlisting-manifest.yaml
+            sed -i "s/image:.*/image: codecode123\\/restaurantlisting-arm-cicd:${VERSION}/" restaurantlisting-manifest.yaml
           '''
           sh 'git checkout main'
           sh 'git add .'
