@@ -4,6 +4,7 @@ pipeline {
   environment {
 //     DOCKERHUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIAL')
     VERSION = "${env.BUILD_ID}"
+    PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:${env.PATH}"
   }
 
   tools {
@@ -12,6 +13,11 @@ pipeline {
   }
 
   stages {
+    stage('Build') {
+      steps {
+        sh 'docker --version'
+      }
+    }
 //     stage('Fix Git Permissions') {
 //         steps {
 //             sh 'git config --global --add safe.directory "*"'
