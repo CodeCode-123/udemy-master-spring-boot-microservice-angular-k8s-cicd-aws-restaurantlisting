@@ -8,13 +8,20 @@ pipeline {
 
   tools {
     maven "Maven"
+    dockerTool "docker"
   }
 
   stages {
-    stage('Fix Git Permissions') {
-        steps {
-            sh 'git config --global --add safe.directory "*"'
-        }
+//     stage('Fix Git Permissions') {
+//         steps {
+//             sh 'git config --global --add safe.directory "*"'
+//         }
+//     }
+    stage('Test Docker CLI') {
+      steps {
+        // This will execute against your Mac's Docker daemon
+        sh 'docker ps'
+      }
     }
 
     stage('Maven Build') {
