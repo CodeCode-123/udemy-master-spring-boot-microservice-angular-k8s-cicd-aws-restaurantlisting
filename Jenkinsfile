@@ -99,12 +99,11 @@ pipeline {
             sh '''
               sed "s/image:.*/image: codecode123\\/restaurantlisting-arm-cicd:${VERSION}/" restaurantlisting-manifest.yaml
             '''
+            sh 'git checkout main'
+            sh 'git add .'
             catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-                sh 'git checkout main'
-                sh 'git add .'
-
+                sh 'git commit -m "Update image tag"'
             }
-            sh 'git commit -m "Update image tag"'
             sshagent(['git-ssh']) {
               sh('git push')
             }
