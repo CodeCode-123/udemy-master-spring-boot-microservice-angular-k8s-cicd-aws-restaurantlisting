@@ -103,7 +103,7 @@ pipeline {
                     sh 'git stash'
                     sh 'git checkout main'
                     sh 'git pull origin main'
-                    sh 'git stash pop'
+                    sh 'git stash pop || (git checkout --theirs . && git stash drop)'
                     sh 'git add restaurantlisting-manifest.yaml'
                     sh 'git commit -m "Update image tag [skip ci]" || true'
                     sh 'git push origin HEAD:main'
